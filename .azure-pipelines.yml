@@ -1,24 +1,23 @@
-
 trigger:
   branches:
     include:
       - main
 
 variables:
-  azure_static_web_apps_api_token: $(deployment_token)
+- group: StaticWebSecrets
 
 stages:
-  - stage: Build
-    displayName: Build Static App
-    jobs:
-      - job: BuildJob
-        pool:
-          vmImage: ubuntu-latest
-        steps:
-          - checkout: self
+- stage: Build
+  displayName: Build Static App
+  jobs:
+    - job: BuildJob
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+        - checkout: self
 
-          - task: AzureStaticWebApp@0
-            inputs:
-              app_location: '.'                 # Your app root folder (where index.html is)
-              output_location: '.'              # Same if no build step (React = 'build', Angular = 'dist', etc.)
-              azure_static_web_apps_api_token: $(azure_static_web_apps_api_token)
+        - task: AzureStaticWebApp@0
+          inputs:
+            app_location: '.'
+            output_location: '.'
+            azure_static_web_apps_api_token: $(deployment_token)
